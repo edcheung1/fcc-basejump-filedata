@@ -1,6 +1,7 @@
 'use strict'
 
 var express = require('express');
+var fs = require('fs');
 var multer = require('multer');
 var bodyParser = require('body-parser');
 var path = require('path');
@@ -21,10 +22,13 @@ app.post('/', multer({ dest: './uploads/'}).single('upl'), function(req,res) {
   
   console.log(req.file);
   
-  res.send(JSON.stringify({'file-size': req.file.size}));
+  var fileSize = req.file.size;
+  
+  fs.unlinkSync('./uploads/' + req.file.filename);
+  
+  res.send(JSON.stringify({'file-size': fileSize}));
 });
 
 app.listen(app.get('port'), function () {
         console.log('Node app is running on port ', app.get('port'));
     });
-//console.log(app.get('views'));
